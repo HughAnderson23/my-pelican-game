@@ -11,7 +11,7 @@ const io = socketIo(server);
 app.use(express.static('public'));
 
 // MongoDB connection
-mongoose.connect('your-mongodb-uri', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });
 
 io.on('connection', (socket) => {
   console.log('A user connected');
