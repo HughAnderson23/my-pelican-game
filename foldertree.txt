@@ -1,0 +1,23 @@
+Folder PATH listing for volume Windows
+Volume serial number is 6E8A-8EA4
+C:.
+|   foldertree.txt
+|   package-lock.json
+|   package.json
+|   server.js
+|               
+\---public
+    |   app.js
+    |   index.html
+    |   style.css
+    |   
+    \---classes
+        |   Character.js
+        |   GameObject.js
+        |   GameWorld.js
+        |   PlayerController.js
+        |   Score.js
+        |   
+        \---extended
+                Consumable.js
+                Sharkpool.js
