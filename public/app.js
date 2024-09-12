@@ -1,5 +1,6 @@
 import { GameWorld } from './classes/GameWorld.js';
 import { PlayerController } from './classes/PlayerController.js';
+import * as THREE from '/node_modules/three/build/three.module.js';
 
 const socket = io();
 const scene = new THREE.Scene();

@@ -5,6 +5,10 @@ C:.
 |   package-lock.json
 |   package.json
 |   server.js
+\---node_modules
+    \---three
+        \---build
+            |   three.module.js
 |               
 \---public
     |   app.js

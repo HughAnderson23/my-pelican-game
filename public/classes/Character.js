@@ -1,5 +1,5 @@
 // Character.js
-import * as THREE from '../libs/three.module.js'; // Ensure Three.js is imported correctly
+import * as THREE from '/node_modules/three/build/three.module.js'; // Ensure Three.js is imported correctly
 
 export class Character {
     constructor(color, x, z) {
