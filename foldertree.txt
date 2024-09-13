@@ -25,3 +25,6 @@ C:.
         \---extended
                 Consumable.js
                 Sharkpool.js
+    |
+    \---managers
+        |   NetworkingManager.js

@@ -1,8 +1,8 @@
 import { GameWorld } from './classes/GameWorld.js';
 import { PlayerController } from './classes/PlayerController.js';
 import * as THREE from '/node_modules/three/build/three.module.js';
+import { NetworkingManager } from './managers/NetworkingManager.js';
 
-const socket = io();
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -10,18 +10,21 @@ document.getElementById('gameCanvas').appendChild(renderer.domElement);
 
 // Add a simple ground plane for raycasting
 const groundGeometry = new THREE.PlaneGeometry(500, 500);
-const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide });
+const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x336699, side: THREE.DoubleSide });
 const ground = new THREE.Mesh(groundGeometry, groundMaterial);
 ground.rotation.x = Math.PI / 2; // Rotate to make it horizontal
 scene.add(ground);
 
-// Instantiate GameWorld and store the game state
-const gameWorld = new GameWorld(scene, socket);
+// // Instantiate GameWorld and store the game state
+// const gameWorld = new GameWorld(scene, socket);
 
 let playerController; // The local player's controller
 let players = {}; // Other players' controllers
 let mouse = new THREE.Vector2(); // Mouse coordinates
 let raycaster = new THREE.Raycaster(); // For raycasting the mouse position onto the game world
+
+// Networking Manager
+const networkingManager = new NetworkingManager();
 
 // Update mouse position and convert it to a point in the game world
 document.addEventListener('mousemove', (event) => {
@@ -31,16 +34,16 @@ document.addEventListener('mousemove', (event) => {
 });
 
 // Register the player and create the PlayerController
-socket.on('registerPlayer', (data) => {
+networkingManager.onPlayerRegistered((data) => {
     playerController = new PlayerController(data.id, 0x3498db, data.position.x, data.position.z); // Create local player's controller
     scene.add(playerController.character.mesh); // Add local player's character mesh to the scene
     console.log("Player created and added to scene", playerController);
 });
 
 // Receive and process game state updates
-socket.on('gameState', (data) => {
+networkingManager.onGameStateUpdate((data) => {
     Object.keys(data.players).forEach((id) => {
-        if (id === socket.id) return; // Skip the local player
+        if (id === playerController.id) return; // Skip the local player
 
         // If the player already exists, update their position
         if (players[id]) {
@@ -89,7 +92,7 @@ function animate() {
             playerController.updatePosition(targetPosition);
 
             // Send the player's updated position to the server
-            socket.emit('move', { x: playerController.character.mesh.position.x, z: playerController.character.mesh.position.z });
+            networkingManager.emitPlayerMove({ x: playerController.character.mesh.position.x, z: playerController.character.mesh.position.z });
 
             // Render the scene with the player's camera
             renderer.render(scene, playerController.camera);
